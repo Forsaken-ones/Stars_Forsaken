@@ -2,51 +2,60 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Stars_Forsaken
+namespace Stars_Forsaken;
+
+public class Game1 : Game
 {
-    public class Game1 : Game
+    private GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+    Texture2D texture;
+    MovingSprite sprite;
+
+    public Game1()
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        _graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
+    }
 
-        public Game1()
-        {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-        }
+    protected override void Initialize()
+    {
+        // TODO: Add your initialization logic here
 
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+        base.Initialize();
+    }
 
-            base.Initialize();
-        }
+    protected override void LoadContent()
+    {
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+        texture = Content.Load<Texture2D>("player");
+        //sprite = new ColoredSprite(texture, Vector2.Zero, Color.Red);
+        sprite = new MovingSprite(texture, Vector2.Zero, 1f);
+    }
+    //System.Numerics.Vector2.Zero
+    protected override void Update(GameTime gameTime)
+    {
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            Exit();
 
-            // TODO: use this.Content to load your game content here
-        }
+        sprite.Update();
 
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+        base.Update(gameTime);
+    }
 
-            // TODO: Add your update logic here
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            base.Update(gameTime);
-        }
+        //sutvarko pixelArt, kad butu geros kokybes jei didini paveiksleli
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        
+        //white - blendina image, realiai tsg palieka orginalu
+        _spriteBatch.Draw(sprite.texture, sprite.Rect, Color.White);
+        //specialiai taip su sprites padaryta, kad butu aisku kur kas, ir kaip lengviau pakeisit tai
+        _spriteBatch.End();
 
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
-        }
+        base.Draw(gameTime);
     }
 }
