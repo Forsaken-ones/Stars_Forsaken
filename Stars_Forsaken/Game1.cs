@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Stars_Forsaken.Entities;
 
 namespace Stars_Forsaken
 {
@@ -8,6 +9,8 @@ namespace Stars_Forsaken
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        Player player;
 
         public Game1()
         {
@@ -27,6 +30,8 @@ namespace Stars_Forsaken
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            player = new Player(Content.Load<Texture2D>("player"), Microsoft.Xna.Framework.Vector2.Zero, 4);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -36,7 +41,7 @@ namespace Stars_Forsaken
                 Exit();
 
             // TODO: Add your update logic here
-
+            player.Update();
             base.Update(gameTime);
         }
 
@@ -45,7 +50,10 @@ namespace Stars_Forsaken
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            player.Draw(_spriteBatch);
 
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
