@@ -20,19 +20,19 @@ namespace Stars_Forsaken
 
             if (state.IsKeyDown(Keys.W))
             {
-                position.Y -= Speed;
+                position.Y -= Speed*2;
             }
             if (state.IsKeyDown(Keys.S))
             {
-                position.Y += Speed;
+                position.Y += Speed*2;
             }
             if (state.IsKeyDown(Keys.A))
             {
-                position.X -= Speed;
+                position.X -= Speed*2;
             }
             if (state.IsKeyDown(Keys.D))
             {
-                position.X += Speed;
+                position.X += Speed*2;
             }
         }
     }

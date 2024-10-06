@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Windows.Forms.VisualStyles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.DXGI;
 
 namespace Stars_Forsaken;
 
@@ -8,8 +11,11 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    Camera _camera;
     Texture2D texture;
+    Texture2D Background;
     MovingSprite sprite;
+    ScaledSprite Bg;
 
     public Game1()
     {
@@ -19,10 +25,15 @@ public class Game1 : Game
     }
 
     protected override void Initialize()
-    {
-        // TODO: Add your initialization logic here
-
+    {   
+        _graphics.IsFullScreen = true;
+        _camera = new Camera();
         base.Initialize();
+
+        // Set the window size
+        _graphics.PreferredBackBufferWidth = 1920;
+        _graphics.PreferredBackBufferHeight = 1080;
+        _graphics.ApplyChanges();
     }
 
     protected override void LoadContent()
@@ -30,16 +41,19 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         texture = Content.Load<Texture2D>("player");
-        //sprite = new ColoredSprite(texture, Vector2.Zero, Color.Red);
+        Background = Content.Load<Texture2D>("background");
+
+        Bg = new ScaledSprite(Background, Vector2.Zero);
         sprite = new MovingSprite(texture, Vector2.Zero, 1f);
     }
-    //System.Numerics.Vector2.Zero
+
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-
         sprite.Update();
+
+        _camera.Position = sprite.position;
 
         base.Update(gameTime);
     }
@@ -48,12 +62,19 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        //sutvarko pixelArt, kad butu geros kokybes jei didini paveiksleli
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        
-        //white - blendina image, realiai tsg palieka orginalu
-        _spriteBatch.Draw(sprite.texture, sprite.Rect, Color.White);
-        //specialiai taip su sprites padaryta, kad butu aisku kur kas, ir kaip lengviau pakeisit tai
+        _spriteBatch.Begin(transformMatrix: _camera.GetTransformation(GraphicsDevice));
+        _spriteBatch.Draw(Bg.texture, Bg.Rect, Color.White);
+
+        //Veliau reiks perkelti i kita vieta
+        Rectangle originalRect = sprite.Rect;
+        Rectangle scaledRect = new Rectangle(
+            originalRect.X,
+            originalRect.Y,
+            originalRect.Width / 5,
+            originalRect.Height / 5
+        );
+        _spriteBatch.Draw(sprite.texture, scaledRect, Color.White);
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
