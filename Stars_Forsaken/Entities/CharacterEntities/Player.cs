@@ -13,17 +13,10 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Stars_Forsaken.Logic;
 
-namespace Stars_Forsaken.Entities
+namespace Stars_Forsaken.Entities.CharacterEntities
 {
     internal class Player : Crewmate
     {
-        PlayerController _controller = new();
-
         public Player(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) : base(texture, position, speed) { }
-
-        public override void Update()
-        {
-            position += _controller.Move(position, speed);
-        }
     }
 }

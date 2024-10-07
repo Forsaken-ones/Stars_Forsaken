@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Stars_Forsaken.Entities;
+using Stars_Forsaken.Entities.CharacterEntities;
+using Stars_Forsaken.Logic.EntityControllers.MovementControllers;
 
 namespace Stars_Forsaken
 {
@@ -10,7 +11,11 @@ namespace Stars_Forsaken
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        Crewmate crewmate;
         Player player;
+
+        CrewmateMovementController crewmateController;
+        PlayerMovementController playerController;
 
         public Game1()
         {
@@ -30,7 +35,11 @@ namespace Stars_Forsaken
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            player = new Player(Content.Load<Texture2D>("player"), Microsoft.Xna.Framework.Vector2.Zero, 4);
+            crewmate = new Crewmate(Content.Load<Texture2D>("player"), new Vector2(300, 300), 2f);
+            player = new Player(Content.Load<Texture2D>("player"), Microsoft.Xna.Framework.Vector2.Zero, 6f);
+
+            crewmateController = new CrewmateMovementController(crewmate);
+            playerController = new PlayerMovementController(player);
 
             // TODO: use this.Content to load your game content here
         }
@@ -41,7 +50,9 @@ namespace Stars_Forsaken
                 Exit();
 
             // TODO: Add your update logic here
-            player.Update();
+            crewmateController.Update();
+            playerController.Update();
+
             base.Update(gameTime);
         }
 
@@ -51,6 +62,7 @@ namespace Stars_Forsaken
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
+            crewmate.Draw(_spriteBatch);
             player.Draw(_spriteBatch);
 
             _spriteBatch.End();
