@@ -11,12 +11,6 @@ namespace Stars_Forsaken
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        Crewmate crewmate;
-        Player player;
-
-        CrewmateMovementController crewmateController;
-        PlayerMovementController playerController;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -35,12 +29,6 @@ namespace Stars_Forsaken
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            crewmate = new Crewmate(Content.Load<Texture2D>("player"), new Vector2(300, 300), 2f);
-            player = new Player(Content.Load<Texture2D>("player"), Microsoft.Xna.Framework.Vector2.Zero, 6f);
-
-            crewmateController = new CrewmateMovementController(crewmate);
-            playerController = new PlayerMovementController(player);
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -50,8 +38,6 @@ namespace Stars_Forsaken
                 Exit();
 
             // TODO: Add your update logic here
-            crewmateController.Update();
-            playerController.Update();
 
             base.Update(gameTime);
         }
