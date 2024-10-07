@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Stars_Forsaken.Entities.CharacterEntities;
+using Stars_Forsaken.Logic.EntityControllers.MovementControllers;
 
 namespace Stars_Forsaken
 {
@@ -45,7 +47,11 @@ namespace Stars_Forsaken
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            crewmate.Draw(_spriteBatch);
+            player.Draw(_spriteBatch);
 
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }
