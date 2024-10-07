@@ -17,11 +17,11 @@ using Stars_Forsaken.Constants.Enums;
 
 namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
 {
-    internal class GenericMovementController
+    internal class CharacterMovementController
     {
         public static UInt16 MOVEMENT_CONTROLLER_COUNT = 0;
 
-        public GenericCharacterEntity entity;
+        public CharacterEntity entity;
 
         // allows changing of cardinal movement directions without modifying methods
         protected Microsoft.Xna.Framework.Vector2 vec2_up_direction = new Microsoft.Xna.Framework.Vector2(0, -1);
@@ -31,7 +31,7 @@ namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
 
         public MovementState movementState;
 
-        public GenericMovementController(GenericCharacterEntity entity)
+        public CharacterMovementController(CharacterEntity entity)
         {
             ++MOVEMENT_CONTROLLER_COUNT;
             this.entity = entity;

@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
 {
-    internal class PlayerMovementController : GenericMovementController
+    internal class PlayerMovementController : CharacterMovementController
     {
         // allows to change values of input keys without modifying methods (can later be used for loading custom keybinds)
         private Keys up_key = Keys.W;

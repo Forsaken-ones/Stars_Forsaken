@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace Stars_Forsaken.Entities.CharacterEntities
 {
-    internal class GenericCharacterEntity
+    internal class CharacterEntity
     {
         public static UInt16 CHARACTER_ENTITY_COUNT { get; protected set; } = 0;
         // graphics
@@ -28,14 +28,14 @@ namespace Stars_Forsaken.Entities.CharacterEntities
         protected internal float speed { get; set; }
 
 
-        public GenericCharacterEntity(Microsoft.Xna.Framework.Vector2 position, float speed)
+        public CharacterEntity(Microsoft.Xna.Framework.Vector2 position, float speed)
         {
             ++CHARACTER_ENTITY_COUNT;
             this.position = position;
             this.speed = speed;
             movementDirection = Microsoft.Xna.Framework.Vector2.Zero;
         }
-        public GenericCharacterEntity(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) 
+        public CharacterEntity(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) 
         {
             ++CHARACTER_ENTITY_COUNT;
             this.texture = texture;

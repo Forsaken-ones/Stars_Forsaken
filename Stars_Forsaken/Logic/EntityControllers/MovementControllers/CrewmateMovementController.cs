@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
 {
-    internal class CrewmateMovementController : GenericMovementController
+    internal class CrewmateMovementController : CharacterMovementController
     {
         private static readonly Random _random = new Random(Environment.TickCount);
         private Stopwatch stopWatch = new Stopwatch();
