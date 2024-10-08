@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Numerics;
 using Microsoft.Xna.Framework;
 
-namespace Stars_Forsaken
+namespace Stars_Forsaken.Entities.Sprites
 {
     internal class Sprite
     {

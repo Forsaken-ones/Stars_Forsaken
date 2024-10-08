@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Stars_Forsaken
+namespace Stars_Forsaken.Entities.Sprites
 {
     internal class ColoredSprite : ScaledSprite
     {

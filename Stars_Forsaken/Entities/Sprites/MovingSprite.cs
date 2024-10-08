@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Stars_Forsaken
+namespace Stars_Forsaken.Entities.Sprites
 {
     internal class MovingSprite : ScaledSprite
     {

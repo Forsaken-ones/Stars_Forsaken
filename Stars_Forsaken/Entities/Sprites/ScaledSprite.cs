@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 //sutvarko dydi, ji gali didinti, mazinti
 //inherits from Sprite
-namespace Stars_Forsaken
+namespace Stars_Forsaken.Entities.Sprites
 {
     internal class ScaledSprite : Sprite
     {

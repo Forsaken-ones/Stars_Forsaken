@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.DXGI;
+using Stars_Forsaken.Entities.Sprites;
 
 namespace Stars_Forsaken;
 
@@ -12,10 +13,8 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     Camera _camera;
-    Texture2D texture;
-    Texture2D Background;
-    MovingSprite sprite;
-    ScaledSprite Bg;
+    MovingSprite player;
+    ScaledSprite background;
 
     public Game1()
     {
@@ -39,21 +38,23 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        TextureManager.LoadContent(Content);
 
-        texture = Content.Load<Texture2D>("player");
-        Background = Content.Load<Texture2D>("background");
+        InitializeSprites();
+    }
 
-        Bg = new ScaledSprite(Background, Vector2.Zero);
-        sprite = new MovingSprite(texture, Vector2.Zero, 1f);
+    private void InitializeSprites()
+    {
+            background = new ScaledSprite(TextureManager.GetTexture("Background"), Vector2.Zero);
+            player = new MovingSprite(TextureManager.GetTexture("Character"), Vector2.Zero, 1f);
     }
 
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
-        sprite.Update();
-
-        _camera.Position = sprite.position;
+        player.Update();
+        _camera.Position = player.position;
 
         base.Update(gameTime);
     }
@@ -63,17 +64,16 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin(transformMatrix: _camera.GetTransformation(GraphicsDevice));
-        _spriteBatch.Draw(Bg.texture, Bg.Rect, Color.White);
-
+        _spriteBatch.Draw(background.texture, background.Rect, Color.White);
         //Veliau reiks perkelti i kita vieta
-        Rectangle originalRect = sprite.Rect;
+        Rectangle originalRect = player.Rect;
         Rectangle scaledRect = new Rectangle(
             originalRect.X,
             originalRect.Y,
-            originalRect.Width / 5,
-            originalRect.Height / 5
+            originalRect.Width / 10,
+            originalRect.Height / 10
         );
-        _spriteBatch.Draw(sprite.texture, scaledRect, Color.White);
+        _spriteBatch.Draw(player.texture, scaledRect, Color.White);
 
         _spriteBatch.End();
 
