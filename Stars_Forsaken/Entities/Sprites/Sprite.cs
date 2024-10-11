@@ -1,28 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using System.Numerics;
 using Microsoft.Xna.Framework;
 
 namespace Stars_Forsaken.Entities.Sprites
 {
-    internal class Sprite
+    public class Sprite
     {
-        public Texture2D texture;
-        public Microsoft.Xna.Framework.Vector2 position;
+        public Texture2D Texture { get; private set; }
+        public Vector2 Position { get; set; } // Changed to property
 
-        public Sprite(Texture2D texture, Microsoft.Xna.Framework.Vector2 position)
+        public Sprite(Texture2D texture, Vector2 position)
         {
-            this.texture = texture;
-            this.position = position;
+            this.Texture = texture;
+            this.Position = position;
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
+            // Default update logic for sprite
+        }
 
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Position, Color.White);
         }
     }
 }

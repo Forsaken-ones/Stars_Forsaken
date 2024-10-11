@@ -9,7 +9,7 @@ public class Camera
 
     public Camera()
     {
-        Zoom = 10.0f;
+        Zoom = 4.0f;
         Rotation = 0.0f;
         Position = Vector2.Zero;
     }

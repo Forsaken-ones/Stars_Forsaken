@@ -12,28 +12,5 @@ namespace Stars_Forsaken.Entities.Sprites
         {
             this.Speed = Speed;
         }
-
-        public override void Update()
-        {
-            base.Update();
-            KeyboardState state = Keyboard.GetState();
-
-            if (state.IsKeyDown(Keys.W))
-            {
-                position.Y -= Speed*2;
-            }
-            if (state.IsKeyDown(Keys.S))
-            {
-                position.Y += Speed*2;
-            }
-            if (state.IsKeyDown(Keys.A))
-            {
-                position.X -= Speed*2;
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                position.X += Speed*2;
-            }
-        }
     }
 }
