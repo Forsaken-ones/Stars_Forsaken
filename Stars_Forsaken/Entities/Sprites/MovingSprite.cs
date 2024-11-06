@@ -6,11 +6,18 @@ namespace Stars_Forsaken.Entities.Sprites
 {
     internal class MovingSprite : ScaledSprite
     {
-        public float Speed;
+        protected internal Vector2 MovementDirection { get; set; }
+        protected internal float Speed { get; set; }
 
-        public MovingSprite(Texture2D texture, Vector2 position, float Speed) : base(texture, position)
+        public MovingSprite(Vector2 position) : base(position) { }
+        public MovingSprite(Vector2 position, float speed) : base(position)
         {
-            this.Speed = Speed;
+            this.Speed = speed;
+        }
+        public MovingSprite(Texture2D texture, Vector2 position) : base(texture, position) { }
+        public MovingSprite(Texture2D texture, Vector2 position, float speed) : base(texture, position)
+        {
+            this.Speed = speed;
         }
     }
 }

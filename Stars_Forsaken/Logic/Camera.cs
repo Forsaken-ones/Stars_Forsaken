@@ -9,9 +9,16 @@ public class Camera
 
     public Camera()
     {
-        Zoom = 4.0f;
-        Rotation = 0.0f;
-        Position = Vector2.Zero;
+        this.Zoom = 4.0f; // 4.0f
+        this.Rotation = 0.0f; //0.0f
+        this.Position = Vector2.Zero; //Vector2.Zero
+    }
+
+    public Camera(Vector2 position, float zoom, float rotation)
+    {
+        this.Zoom = zoom;
+        this.Rotation = rotation;
+        this.Position = position;
     }
 
     public Matrix GetTransformation(GraphicsDevice graphicsDevice)

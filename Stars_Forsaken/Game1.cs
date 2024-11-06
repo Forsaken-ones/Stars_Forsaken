@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using SharpDX.DXGI;
 using Stars_Forsaken.Entities.Map;
 using Stars_Forsaken.Entities.Sprites;
+using Stars_Forsaken.Logic;
 
 namespace Stars_Forsaken;
 
@@ -14,7 +15,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     Camera _camera;
-    PlayerSprite player;
+    Player player;
     //ScaledSprite background;
     private MapLogic _map;
     public TextureManager TextureManager = new TextureManager();

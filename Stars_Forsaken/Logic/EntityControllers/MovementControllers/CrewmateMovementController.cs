@@ -51,7 +51,7 @@ namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
             }
             int distance = _random.Next(minimumDistance, maximumDistance);
             ROAM_DISPLACEMENT = ROAM_DIRECTION * distance;
-            ROAM_DESTINATION = entity.position + ROAM_DISPLACEMENT;
+            ROAM_DESTINATION = entity.Position + ROAM_DISPLACEMENT;
 
             movementState = Constants.Enums.MovementState.ROAMING;
         }
@@ -83,7 +83,7 @@ namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
 
             else if(movementState == Constants.Enums.MovementState.ROAMING)
             {
-                if (entity.position == ROAM_DESTINATION)
+                if (entity.Position == ROAM_DESTINATION)
                 {
                     movementState = Constants.Enums.MovementState.IDLE;
 

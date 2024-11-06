@@ -5,13 +5,22 @@ namespace Stars_Forsaken.Entities.Sprites
 {
     public class Sprite
     {
-        public Texture2D Texture { get; private set; }
-        public Vector2 Position { get; set; } // Changed to property
+        protected internal Texture2D Texture { get; protected set; }
+        protected internal Vector2 Position { get; set; } // Changed to property
 
+        public Sprite(Vector2 position)
+        {
+            this.Position = position;
+        }
         public Sprite(Texture2D texture, Vector2 position)
         {
             this.Texture = texture;
             this.Position = position;
+        }
+
+        public void LoadTexture(Texture2D texture)
+        {
+            this.Texture = texture;
         }
 
         public virtual void Update(GameTime gameTime)

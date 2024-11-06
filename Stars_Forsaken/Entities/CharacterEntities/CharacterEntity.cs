@@ -11,50 +11,24 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Stars_Forsaken.Entities.Sprites;
 
 namespace Stars_Forsaken.Entities.CharacterEntities
 {
-    internal class CharacterEntity
+    internal class CharacterEntity : MovingSprite
     {
         public static UInt16 CHARACTER_ENTITY_COUNT { get; protected set; } = 0;
-        // graphics
-        protected internal Texture2D texture { get; protected set; }
 
-        // movement data
-        protected internal Microsoft.Xna.Framework.Vector2 position { get; set; }
-        protected internal Microsoft.Xna.Framework.Vector2 movementDirection { get; set; }
-
-        // physical characteristics and stats
-        protected internal float speed { get; set; }
-
-
-        public CharacterEntity(Microsoft.Xna.Framework.Vector2 position, float speed)
+        public CharacterEntity(Microsoft.Xna.Framework.Vector2 position) : base(position) { }
+        public CharacterEntity(Microsoft.Xna.Framework.Vector2 position, float speed) : base(position, speed)
         {
             ++CHARACTER_ENTITY_COUNT;
-            this.position = position;
-            this.speed = speed;
-            movementDirection = Microsoft.Xna.Framework.Vector2.Zero;
+            MovementDirection = Microsoft.Xna.Framework.Vector2.Zero;
         }
-        public CharacterEntity(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) 
+        public CharacterEntity(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) : base(texture, position, speed)
         {
             ++CHARACTER_ENTITY_COUNT;
-            this.texture = texture;
-            this.position = position;
-            this.speed = speed;
-            movementDirection = Microsoft.Xna.Framework.Vector2.Zero;
-        }
-
-        public void LoadTexture(Texture2D texture)
-        {
-            this.texture = texture;
-        }
-
-        public virtual void Update() // overridable for Player class to have its own implementation
-        { }
-
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, position, Color.White);
+            MovementDirection = Microsoft.Xna.Framework.Vector2.Zero;
         }
     }
 }

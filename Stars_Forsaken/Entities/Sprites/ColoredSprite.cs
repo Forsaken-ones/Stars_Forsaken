@@ -12,5 +12,9 @@ namespace Stars_Forsaken.Entities.Sprites
         {
             this.Color = color;
         }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Position, Color);
+        }
     }
 }

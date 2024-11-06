@@ -16,11 +16,6 @@ namespace Stars_Forsaken.Entities.CharacterEntities
 {
     internal class Crewmate : CharacterEntity
     {
-        public Crewmate(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) : base(texture, position, speed)
-        {
-            this.texture = texture;
-            this.position = position;
-            this.speed = speed;
-        }
+        public Crewmate(Texture2D texture, Microsoft.Xna.Framework.Vector2 position, float speed) : base(texture, position, speed) { }  
     }
 }

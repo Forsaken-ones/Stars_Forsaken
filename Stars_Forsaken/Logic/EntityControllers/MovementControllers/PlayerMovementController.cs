@@ -38,7 +38,7 @@ namespace Stars_Forsaken.Logic.EntityControllers.MovementControllers
             // resetting the movement direction to zero on each tick so that the player stops moving when no keys are pressed
             // on every subsequent tick, it is assumed that the player isn't moving until a key press is detected
             // this protects from undefined behavior when two opposite keys are pressed (now they cancel each other out, previously it'd make the character disappear)
-            entity.movementDirection = Microsoft.Xna.Framework.Vector2.Zero;
+            entity.MovementDirection = Microsoft.Xna.Framework.Vector2.Zero;
 
 
             if (_keyboardState.IsKeyDown(up_key))
