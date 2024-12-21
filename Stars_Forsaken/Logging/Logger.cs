@@ -13,13 +13,13 @@ namespace Stars_Forsaken.Logging
     public class Logger : ILogger
     {
         private readonly ConcurrentQueue<string> _logQueue = new ConcurrentQueue<string>();
-        private readonly StreamWriter _writer;
+        private readonly LoggerProvider _loggerProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly Task _loggingTask;
 
         public Logger(LoggerProvider loggerProvider)
         {
-            _writer = loggerProvider.Writer;
+            _loggerProvider = loggerProvider;
             _loggingTask = Task.Run(() => ProcessLogQueue(_cancellationTokenSource.Token));
         }
 
@@ -52,13 +52,13 @@ namespace Stars_Forsaken.Logging
                 {
                     try
                     {
-                        Monitor.Enter(_writer);
-                        _writer.WriteLine(logEntry);
-                        _writer.Flush();
+                        Monitor.Enter(_loggerProvider.Writer);
+                        _loggerProvider.Writer.WriteLine(logEntry);
+                        _loggerProvider.Writer.Flush();
                     }
                     finally
                     {
-                        Monitor.Exit(_writer);
+                        Monitor.Exit(_loggerProvider.Writer);
                     }
                 }
                 else
@@ -72,7 +72,7 @@ namespace Stars_Forsaken.Logging
         {
             _cancellationTokenSource.Cancel();
             _loggingTask.Wait();
-            _writer.Dispose();
+            _loggerProvider.Dispose();
         }
 
         public IDisposable BeginScope<TState>(TState state)

@@ -18,9 +18,6 @@ namespace Stars_Forsaken.Logging
 
         private string LogsPath { get; }
 
-
-        // configures a path for a log file and creates a streamwriter
-        //                   pass an appsettings.json here
         public LoggerProvider(IOptions<LoggerConfiguration> config, string baseDir)
         {
             Config = config.Value;
@@ -44,6 +41,7 @@ namespace Stars_Forsaken.Logging
         {
             Writer.Flush();
             Writer.Close();
+            Writer.Dispose();
         }
 
         public ILogger CreateLogger()

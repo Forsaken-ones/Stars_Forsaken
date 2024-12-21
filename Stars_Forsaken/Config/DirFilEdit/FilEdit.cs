@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Stars_Forsaken.Config.DirFilEdit
 {
+    /// <summary>
+    /// Wrapper for the <see cref="File"/> class that exposes static methods for file manipulation.
+    /// </summary>
     public class FilEdit
     {
         public static ILogger Logger { get; set; }
@@ -96,6 +99,11 @@ namespace Stars_Forsaken.Config.DirFilEdit
             return CreateFile(filePath);
         }
 
+        /// <summary>
+        /// Deletes a file at a given path.
+        /// </summary>
+        /// <param name="filePath">Path to the file.</param>
+        /// <returns><see langword="true"/> if successful, <see langword="false"/> otherwise</returns>
         public static bool DeleteFile(string filePath)
         {
             try
@@ -111,6 +119,12 @@ namespace Stars_Forsaken.Config.DirFilEdit
             }
         }
 
+        /// <summary>
+        /// Deletes a file of a given name at a given path.
+        /// </summary>
+        /// <param name="fileName">Name of the file to be deleted.</param>
+        /// <param name="path">Path to the file's directory.</param>
+        /// <returns><see langword="true"/> if successful, <see langword="false"/> otherwise</returns>
         public static bool DeleteFile(string path, string fileName)
         {
             string filePath = Path.Combine(path, fileName);

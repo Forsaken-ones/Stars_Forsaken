@@ -35,7 +35,7 @@ public class StarsForsaken : Game
     protected override void Initialize()
     {
         var loggerConfig = new LoggerConfiguration();
-        _loggerProvider = new LoggerProvider(Options.Create(loggerConfig), DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken"));
+        _loggerProvider = new LoggerProvider(ConfigurationLoader.CreateOptions(loggerConfig), DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken"));
 
         _logger = _loggerProvider.CreateLogger();
 
@@ -48,7 +48,6 @@ public class StarsForsaken : Game
         _graphics.ApplyChanges();
 
         _configLoader = new ConfigurationLoader(DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken"), "Config/json", _logger);
-
 
 
         _logger.LogInformation("Application initialized");

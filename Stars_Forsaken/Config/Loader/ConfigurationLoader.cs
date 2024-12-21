@@ -143,10 +143,10 @@ namespace Stars_Forsaken.Config.Loader
 
 
         /// <summary>
-        /// Creates a configured options object using a configuration.
+        /// Crates an <see cref="IOptions{TConfig}"/> object from a <typeparamref name="TConfig"/> object.
         /// </summary>
-        /// <typeparam name="TConfig"></typeparam>
-        /// <param name="config"></param>
+        /// <typeparam name="TConfig">Type of configuration.</typeparam>
+        /// <param name="config">A <typeparamref name="TConfig"/> configuration object.</param>
         /// <returns>An <see cref="IOptions{TConfig}"/> object.</returns>
         public static IOptions<TConfig> CreateOptions<TConfig>(TConfig config) where TConfig : notnull, ConfigurationModel
         {

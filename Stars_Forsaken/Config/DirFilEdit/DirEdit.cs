@@ -4,6 +4,9 @@ using System.IO;
 
 namespace Stars_Forsaken.Config.DirFilEdit
 {
+    /// <summary>
+    /// Wrapper for the <see cref="Directory"/> class that exposes static methods for directory manipulation.
+    /// </summary>
     public class DirEdit
     {
         public static ILogger Logger { get; set; }
