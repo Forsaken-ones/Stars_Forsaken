@@ -8,12 +8,22 @@ using Stars_Forsaken;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using Serilog;
+using System.Threading;
+using System.Runtime.InteropServices;
+using Stars_Forsaken.Utilities.ConsoleInterpreter;
 
 namespace Stars_Forsaken;
 public class Program
 {
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool AllocConsole();
+
     static void Main(string[] args)
     {
+        Thread consoleThread = new Thread(new ThreadStart(StartConsole));
+        consoleThread.Start();
+
         Log.Logger = LoggerFactory.CreateDefaultLogger(ConfigurationLoader.CreateOptions(new LoggerConfig()));
 
         Log.Debug("Initializing application");
@@ -22,42 +32,40 @@ public class Program
         var _configLoader = new ConfigurationLoader(DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken"), "Config/json");
 
         Log.Debug("Loading launch parameters");
-        var launchConfig = _configLoader.LoadConfiguration<LaunchConfig>("launchConfig.json");
+        var launchConfig = _configLoader.LoadConfiguration<LaunchConfig>("launchConfig.json"); 
 
         Log.Debug("Launch parameters loaded");
+        if(launchConfig.Environment == LaunchEnv.Development)
+        {
+            Log.Debug("Launching Stars Forsaken development environment");
+            using var game = new StarsForsakenDev();
+            game.Run();
+        }
+        else if(launchConfig.Environment == LaunchEnv.Production)
+        {
+            Log.Debug("Launching Stars Forsaken");
+            using var game = new StarsForsaken();
+            game.Run();
+        }
+        else if (launchConfig.Environment == LaunchEnv.Testing)
+        {
+            Log.Debug("Launching Stars Forsaken testing environment");
+            using var game = new StarsForsakenTest();
+            game.Run();
+        }
     }
-    
-}
-/*
-void InitializeApplication()    
-{
-    Stars_Forsaken.Logging.ILoggerProvider _loggerProvider;
-    ILogger _logger;
-    IConfigurationLoader _configLoader;
 
-    var loggerConfig = new LoggerConfiguration();
-    _loggerProvider = new LoggerProvider(ConfigurationLoader.CreateOptions(loggerConfig), DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken"));
-
-    _logger = _loggerProvider.CreateLogger();
-    _logger.LogCritical("Initializing application");
-    try
+    static void StartConsole()
     {
-        throw new Exception("Balls");
+        while (true)
+        {
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) continue;
+            else
+                ConsoleInterpreter.ExecuteCommand(input);
+            
+            Console.Write("> ");
+        }
     }
-    catch (Exception e)
-    {
-        _logger.LogError(e, "Test");
-    }
 
-    DirEdit.Logger = _logger;
-    FilEdit.Logger = _logger;
-
-    _logger.LogInformation($"Initializing configuration loader");
-    _configLoader = new ConfigurationLoader(DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken"), "Config/json", _logger);
-
-    _logger.LogInformation($"Loading program launch configuration");
-    var launchConfig = _configLoader.LoadConfiguration<LaunchConfig>("launchConfig.json");
-
-    _logger.LogInformation($"Selected environment");
 }
-*/
