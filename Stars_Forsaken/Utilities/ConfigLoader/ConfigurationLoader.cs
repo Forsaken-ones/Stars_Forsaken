@@ -9,32 +9,30 @@ using System.Text.Json;
 using System.IO;
 using System.Reflection.Metadata;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
-using Stars_Forsaken.Config.DirFilEdit;
+using Stars_Forsaken.Utilities.DirFilEdit;
+using Stars_Forsaken.Config.Models;
+using System.CodeDom;
+using Serilog;
 
-namespace Stars_Forsaken.Config.Loader
+namespace Stars_Forsaken.Utilities.ConfigLoader
 {
     public class ConfigurationLoader : IConfigurationLoader
     {
         private readonly string _defaultPath = AppContext.BaseDirectory;
-        private readonly ILogger _logger;
         public string ConfigurationFolder { get; private set; }
 
 
-        public ConfigurationLoader(string parentDir, string configFolder, ILogger logger)
+        public ConfigurationLoader(string parentDir, string configFolder)
         {
-            _logger = logger;
-
             var maybeConfigFolder = Path.Combine(parentDir, configFolder);
-            if(!DirEdit.ExistsDir(maybeConfigFolder))
+            if (!DirEdit.ExistsDir(maybeConfigFolder))
             {
-                _logger.LogWarning($"Configuration folder \"{maybeConfigFolder}\" not found. " +
-                    $"Attempting to create folder");
+                Log.Warning("Configuration folder {Folder} not found. Attempting to create folder", maybeConfigFolder);
 
                 DirEdit.CreateDir(maybeConfigFolder);
-                if(!DirEdit.ExistsDir(maybeConfigFolder))
+                if (!DirEdit.ExistsDir(maybeConfigFolder))
                 {
-                    _logger.LogWarning($"Could not create configuration folder. Setting to default: \"{_defaultPath}\"");
+                    Log.Warning("Could not create configuration folder. Setting to default: {Path}", _defaultPath);
 
                     ConfigurationFolder = _defaultPath;
                 }
@@ -48,7 +46,7 @@ namespace Stars_Forsaken.Config.Loader
                 ConfigurationFolder = maybeConfigFolder;
             }
 
-            _logger.LogInformation($"Configuration loader initialized at path {ConfigurationFolder}");
+            Log.Debug("Configuration loader initialized at {Path}", ConfigurationFolder);
         }
         // pass a base directory and a realtive path to it, e.g. "Config/json"
         // initializes the loader to take config jsons from the given directory
@@ -57,14 +55,14 @@ namespace Stars_Forsaken.Config.Loader
 
         public void ChangePath(string configFolderPath)
         {
-            if(!DirEdit.ExistsDir(configFolderPath))
+            if (!DirEdit.ExistsDir(configFolderPath))
             {
-                _logger.LogWarning($"Configuration folder \"{configFolderPath}\" not found, no changes made");
+                Log.Warning("Configuration folder {Folder} not found, no changes made", configFolderPath);
             }
             else
             {
                 ConfigurationFolder = configFolderPath;
-                _logger.LogInformation($"Configuration folder changed to \"{configFolderPath}\"");
+                Log.Debug("Configuration folder changed to {Folder}", configFolderPath);
             }
         }
 
@@ -81,26 +79,39 @@ namespace Stars_Forsaken.Config.Loader
             try
             {
                 var configFile = Path.Combine(ConfigurationFolder, configFileName);
-                if (!FilEdit.ExistsFile(configFile))
+                if (!FilEdit.ExistsFile(configFile) || FilEdit.ReadFile(configFile) == "")
                 {
-                    _logger.LogWarning($"Configuration file \"{configFileName}\" not found. " +
-                        $"Attempting to create file from default template");
+                    Log.Warning("Configuration file {File} not found. Attempting to create file from default template", configFileName);
 
                     FilEdit.CreateFile(configFile);
-                    if(!FilEdit.ExistsFile(configFile))
+                    if (!FilEdit.ExistsFile(configFile))
                     {
-                        _logger.LogWarning($"Could not create configuration file, loading default values");
+                        Log.Warning("Could not create configuration file, loading default values");
                         return new TConfig();
+                    }
+                    else
+                    {
+                        Log.Debug("Configuration file {File} created from default template", configFileName);
+                        var serialized = JsonSerializer.Serialize(new TConfig());
+                        using (var fs = FilEdit.OpenFileStream(configFile, FilEdit.ReadWriteOptions))
+                        {
+                            using (var writer = new StreamWriter(fs))
+                            {
+                                writer.Write(serialized);
+                                Log.Debug("Default configuration written to {File}", configFileName);
+                            }
+                        }
                     }
                 }
 
                 var jsonData = FilEdit.ReadFile(configFile);
+                Log.Debug("Configuration file opened and read");
 
                 return JsonSerializer.Deserialize<TConfig>(jsonData);
             }
             catch (Exception e)
             {
-                _logger.LogError("Could not load configuration, loading default values", e);
+                Log.Error(e, "Could not load configuration, loading default values");
                 return new TConfig();
             }
         }
@@ -115,13 +126,12 @@ namespace Stars_Forsaken.Config.Loader
                 var configFile = Path.Combine(ConfigurationFolder, configFileName);
                 if (!FilEdit.ExistsFile(configFile))
                 {
-                    _logger.LogWarning($"Configuration file \"{configFileName}\" not found. " +
-                        $"Attempting to create file from default template");
+                    Log.Warning("Configuration file {File} not found. Attempting to create file from default template", configFileName);
 
                     FilEdit.CreateFile(configFile);
                     if (!FilEdit.ExistsFile(configFile))
                     {
-                        _logger.LogWarning($"Could not create configuration file, loading default values");
+                        Log.Warning("Could not create configuration file, loading default values");
                         return new Dictionary<string, TConfig>();
                     }
                 }
@@ -132,7 +142,7 @@ namespace Stars_Forsaken.Config.Loader
             }
             catch (Exception e)
             {
-                _logger.LogError("Could not load configuration, loading default values", e);
+                Log.Error(e, "Could not load configuration, loading default values");
                 return new Dictionary<string, TConfig>();
             }
         }
@@ -157,3 +167,5 @@ namespace Stars_Forsaken.Config.Loader
         // e.g. can be used to pass keyboard controlls configuration to a MovementController or an InputManager
     }
 }
+
+

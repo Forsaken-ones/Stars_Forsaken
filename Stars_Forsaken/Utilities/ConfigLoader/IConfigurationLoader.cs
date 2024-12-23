@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using Stars_Forsaken.Config.Models;
 
-namespace Stars_Forsaken.Config.Loader
+namespace Stars_Forsaken.Utilities.ConfigLoader
 {
     public interface IConfigurationLoader
     {

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stars_Forsaken.Config
+namespace Stars_Forsaken.Config.Models.enums
 {
-    public class ConfigurationModel
+    internal enum LaunchEnv
     {
-        public ConfigurationModel() { }
+        Development,
+        Testing,
+        Production
     }
 }

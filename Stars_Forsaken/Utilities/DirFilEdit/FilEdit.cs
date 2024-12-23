@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -7,16 +6,15 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
-namespace Stars_Forsaken.Config.DirFilEdit
+namespace Stars_Forsaken.Utilities.DirFilEdit
 {
     /// <summary>
     /// Wrapper for the <see cref="File"/> class that exposes static methods for file manipulation.
     /// </summary>
     public class FilEdit
     {
-        public static ILogger Logger { get; set; }
-
         public static FileStreamOptions ReadOptions = new FileStreamOptions
         {
             Mode = FileMode.Open,
@@ -39,7 +37,7 @@ namespace Stars_Forsaken.Config.DirFilEdit
         {
             Mode = FileMode.Open,
             Access = FileAccess.ReadWrite,
-            Share = FileShare.Read,
+            Share = FileShare.ReadWrite,
             BufferSize = 4096,
             Options = FileOptions.SequentialScan
         };
@@ -61,7 +59,7 @@ namespace Stars_Forsaken.Config.DirFilEdit
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not check if file exists at path {filePath}", e);
+                Log.Error(e, "Could not check if file exists at {Path}", filePath);
                 return false;
             }
         }
@@ -80,14 +78,14 @@ namespace Stars_Forsaken.Config.DirFilEdit
                 if (!ExistsFile(filePath))
                 {
                     File.Create(filePath);
-                    Logger.LogInformation($"Created file at path {filePath}");
+                    Log.Debug("Created file at {Path}", filePath);
                     return filePath;
                 }
                 return filePath;
             }
             catch (Exception e)
             {
-                Logger.LogError($"Cannot create file {filePath}", e);
+                Log.Error(e, "Cannot create file at {Path}", filePath);
                 return null;
             }
         }
@@ -109,12 +107,12 @@ namespace Stars_Forsaken.Config.DirFilEdit
             try
             {
                 File.Delete(filePath);
-                Logger.LogInformation($"Deleted file at path {filePath}");
+                Log.Debug("Deleted file at {Path}", filePath);
                 return true;
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not delete file at path {filePath}", e);
+                Log.Error(e, "Could not check if file exists at {Path}", filePath);
                 return false;
             }
         }
@@ -140,7 +138,7 @@ namespace Stars_Forsaken.Config.DirFilEdit
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not read file at path {filePath}", e);
+                Log.Error(e, "Could not read file at {Path}", filePath);
                 return null;
             }
         }
@@ -160,7 +158,7 @@ namespace Stars_Forsaken.Config.DirFilEdit
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not read file at path {filePath}", e);
+                Log.Error(e, "Could not read file at {Path}", filePath);
                 return null;
             }
         }
@@ -177,12 +175,12 @@ namespace Stars_Forsaken.Config.DirFilEdit
             try
             {
                 var file = File.Open(filePath, options);
-                Logger.LogInformation($"Opened file at path {filePath}");
+                Log.Debug("Opened file at {Path}", filePath);
                 return file;
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not open file at path {filePath}", e);
+                Log.Error(e, "Could not open file at {Path}", filePath);
                 return null;
             }
         }
@@ -198,12 +196,12 @@ namespace Stars_Forsaken.Config.DirFilEdit
         {
             try
             {
-                Logger.LogInformation($"File {fileStream.Name} closed");
+                Log.Debug("File {Name} closed", fileStream.Name);
                 fileStream.Close();
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not close file {fileStream.Name}", e);
+                Log.Error(e, "Could not close file {Name}", fileStream.Name);
             }
         }
     }

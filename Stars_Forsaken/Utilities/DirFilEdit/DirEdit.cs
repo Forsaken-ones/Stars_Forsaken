@@ -1,16 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Serilog;
 using System;
 using System.IO;
 
-namespace Stars_Forsaken.Config.DirFilEdit
+namespace Stars_Forsaken.Utilities.DirFilEdit
 {
     /// <summary>
     /// Wrapper for the <see cref="Directory"/> class that exposes static methods for directory manipulation.
     /// </summary>
     public class DirEdit
     {
-        public static ILogger Logger { get; set; }
-
         public static string GetParentDir(string path)
         {
             try
@@ -19,7 +17,7 @@ namespace Stars_Forsaken.Config.DirFilEdit
             }
             catch (Exception e)
             {
-                Logger.LogError($"Cannot access parent directory of {path}", e);
+                Log.Error(e, "Cannot access parent directory of {Path}", path);
                 return null;
             }
         }
@@ -66,14 +64,14 @@ namespace Stars_Forsaken.Config.DirFilEdit
                 if(!ExistsDir(dirPath))
                 {
                     Directory.CreateDirectory(dirPath);
-                    Logger.LogInformation($"Created directories and/or subdirectories at path {dirPath}");
+                    Log.Debug("Created directories and/or subdirectories at {Path}", dirPath);
                 }
 
                 return dirPath;
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not create directories and/or subdirectories at path {dirPath}", e);
+                Log.Error(e, "Could not create directories and/or subdirectories at {Path}", dirPath);
                 return null;
             }
         }
@@ -90,12 +88,12 @@ namespace Stars_Forsaken.Config.DirFilEdit
             try
             {
                 Directory.Delete(dirPath, true);
-                Logger.LogInformation($"Deleted directories and/or subdirectories at path {dirPath}");
+                Log.Debug("Deleted directories and/or subdirectories at {Path}", dirPath);
                 return true;
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not delete directories and/or subdirectories at path {dirPath}", e);
+                Log.Error(e, "Could not delete directories and/or subdirectories at {Path}", dirPath);
                 return false;
             }
         }
@@ -115,7 +113,7 @@ namespace Stars_Forsaken.Config.DirFilEdit
             }
             catch (Exception e)
             {
-                Logger.LogError($"Could not check if directories and/or subdirectories exist at path {dirPath}", e);
+                Log.Error(e, "Could not check if directories and/or subdirectories exist at {Path}", dirPath);
                 return false;
             }
         }
