@@ -8,13 +8,13 @@ using Serilog;
 using Stars_Forsaken.Config.Models;
 using Microsoft.Extensions.Options;
 using Serilog.Core;
-using Stars_Forsaken.Utilities.DirFilEdit;
+using Stars_Forsaken.Utilities.DirFileMan;
 
 namespace Stars_Forsaken.Logging
 {
     public static class LoggerFactory
     {
-        private static string _baseDirectory = DirEdit.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken");
+        private static string _baseDirectory = DirManager.GetParentDir(AppContext.BaseDirectory, "Stars_Forsaken");
         public static Logger CreateLogger(params Action<LoggerConfiguration>[] configureActions)
         {
             var loggerConfig = new LoggerConfiguration();

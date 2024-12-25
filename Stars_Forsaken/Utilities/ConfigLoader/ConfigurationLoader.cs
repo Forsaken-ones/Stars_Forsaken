@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.IO;
 using System.Reflection.Metadata;
 using Microsoft.Extensions.Options;
-using Stars_Forsaken.Utilities.DirFilEdit;
+using Stars_Forsaken.Utilities.DirFileMan;
 using Stars_Forsaken.Config.Models;
 using System.CodeDom;
 using Serilog;
@@ -25,12 +25,12 @@ namespace Stars_Forsaken.Utilities.ConfigLoader
         public ConfigurationLoader(string parentDir, string configFolder)
         {
             var maybeConfigFolder = Path.Combine(parentDir, configFolder);
-            if (!DirEdit.ExistsDir(maybeConfigFolder))
+            if (!DirManager.ExistsDir(maybeConfigFolder))
             {
                 Log.Warning("Configuration folder {Folder} not found. Attempting to create folder", maybeConfigFolder);
 
-                DirEdit.CreateDir(maybeConfigFolder);
-                if (!DirEdit.ExistsDir(maybeConfigFolder))
+                DirManager.CreateDir(maybeConfigFolder);
+                if (!DirManager.ExistsDir(maybeConfigFolder))
                 {
                     Log.Warning("Could not create configuration folder. Setting to default: {Path}", _defaultPath);
 
@@ -55,7 +55,7 @@ namespace Stars_Forsaken.Utilities.ConfigLoader
 
         public void ChangePath(string configFolderPath)
         {
-            if (!DirEdit.ExistsDir(configFolderPath))
+            if (!DirManager.ExistsDir(configFolderPath))
             {
                 Log.Warning("Configuration folder {Folder} not found, no changes made", configFolderPath);
             }
@@ -79,33 +79,28 @@ namespace Stars_Forsaken.Utilities.ConfigLoader
             try
             {
                 var configFile = Path.Combine(ConfigurationFolder, configFileName);
-                if (!FilEdit.ExistsFile(configFile) || FilEdit.ReadFile(configFile) == "")
+                if (!FileManager.ExistsFile(configFile) || FileManager.ReadFile(configFile) == "")
                 {
                     Log.Warning("Configuration file {File} not found. Attempting to create file from default template", configFileName);
 
-                    FilEdit.CreateFile(configFile);
-                    if (!FilEdit.ExistsFile(configFile))
+                    FileManager.CreateFile(configFile);
+                    if (!FileManager.ExistsFile(configFile))
                     {
                         Log.Warning("Could not create configuration file, loading default values");
                         return new TConfig();
                     }
                     else
                     {
-                        Log.Debug("Configuration file {File} created from default template", configFileName);
                         var serialized = JsonSerializer.Serialize(new TConfig());
-                        using (var fs = FilEdit.OpenFileStream(configFile, FilEdit.ReadWriteOptions))
-                        {
-                            using (var writer = new StreamWriter(fs))
-                            {
-                                writer.Write(serialized);
-                                Log.Debug("Default configuration written to {File}", configFileName);
-                            }
-                        }
+                        var writer = FileWriter.OpenFile(configFile, FileWriter.Options("readwrite"));
+
+                        writer.Write(serialized);
+                        Log.Debug("Configuration file {File} created from default template", configFileName);
                     }
                 }
 
-                var jsonData = FilEdit.ReadFile(configFile);
-                Log.Debug("Configuration file opened and read");
+                var jsonData = FileManager.ReadFile(configFile);
+                Log.Debug("Configuration file opened");
 
                 return JsonSerializer.Deserialize<TConfig>(jsonData);
             }
@@ -124,19 +119,19 @@ namespace Stars_Forsaken.Utilities.ConfigLoader
             try
             {
                 var configFile = Path.Combine(ConfigurationFolder, configFileName);
-                if (!FilEdit.ExistsFile(configFile))
+                if (!FileManager.ExistsFile(configFile))
                 {
                     Log.Warning("Configuration file {File} not found. Attempting to create file from default template", configFileName);
 
-                    FilEdit.CreateFile(configFile);
-                    if (!FilEdit.ExistsFile(configFile))
+                    FileManager.CreateFile(configFile);
+                    if (!FileManager.ExistsFile(configFile))
                     {
                         Log.Warning("Could not create configuration file, loading default values");
                         return new Dictionary<string, TConfig>();
                     }
                 }
 
-                var jsonData = FilEdit.ReadFile(configFile);
+                var jsonData = FileManager.ReadFile(configFile);
 
                 return JsonSerializer.Deserialize<Dictionary<string, TConfig>>(jsonData);
             }

@@ -7,50 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using Stars_Forsaken.Constants.Exceptions;
 
-namespace Stars_Forsaken.Utilities.DirFilEdit
+namespace Stars_Forsaken.Utilities.DirFileMan
 {
     /// <summary>
     /// Wrapper for the <see cref="File"/> class that exposes static methods for file manipulation.
     /// </summary>
-    public class FilEdit
+    public static class FileManager
     {
-        public static FileStreamOptions ReadOptions = new FileStreamOptions
-        {
-            Mode = FileMode.Open,
-            Access = FileAccess.Read,
-            Share = FileShare.Read,
-            BufferSize = 4096,
-            Options = FileOptions.SequentialScan
-        };
-
-        public static FileStreamOptions WriteOptions = new FileStreamOptions
-        {
-            Mode = FileMode.Open,
-            Access = FileAccess.Write,
-            Share = FileShare.Read,
-            BufferSize = 4096,
-            Options = FileOptions.None
-        };
-
-        public static FileStreamOptions ReadWriteOptions = new FileStreamOptions
-        {
-            Mode = FileMode.Open,
-            Access = FileAccess.ReadWrite,
-            Share = FileShare.ReadWrite,
-            BufferSize = 4096,
-            Options = FileOptions.SequentialScan
-        };
-
-        public static FileStreamOptions AppendOptions = new FileStreamOptions
-        {
-            Mode = FileMode.Append,
-            Access = FileAccess.Write,
-            Share = FileShare.ReadWrite,
-            BufferSize = 4096,
-            Options = FileOptions.SequentialScan
-        };
-
         public static bool ExistsFile(string filePath)
         {
             try
@@ -59,8 +24,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Could not check if file exists at {Path}", filePath);
-                return false;
+                throw new FileManagementException("Could not check if file exists at " + filePath, e);
             }
         }
 
@@ -85,8 +49,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Cannot create file at {Path}", filePath);
-                return null;
+                throw new FileManagementException("Could not create file at " + filePath, e);
             }
         }
 
@@ -112,8 +75,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Could not check if file exists at {Path}", filePath);
-                return false;
+                throw new FileManagementException("Could not delete file at " + filePath, e);
             }
         }
 
@@ -138,8 +100,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Could not read file at {Path}", filePath);
-                return null;
+                throw new FileManagementException("Could not read file at " + filePath, e);
             }
         }
 
@@ -158,8 +119,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Could not read file at {Path}", filePath);
-                return null;
+                throw new FileManagementException("Could not read file at " + filePath, e);
             }
         }
 
@@ -168,41 +128,6 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             string filePath = Path.Combine(path, fileName);
 
             return ReadFileLines(filePath);
-        }
-
-        public static FileStream OpenFileStream(string filePath, FileStreamOptions options)
-        {
-            try
-            {
-                var file = File.Open(filePath, options);
-                Log.Debug("Opened file at {Path}", filePath);
-                return file;
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "Could not open file at {Path}", filePath);
-                return null;
-            }
-        }
-
-        public static FileStream OpenFileStream(string path, string fileName, FileStreamOptions options)
-        {
-            string filePath = Path.Combine(path, fileName);
-
-            return OpenFileStream(filePath, options);
-        }
-
-        public static void CloseFileStream(FileStream fileStream)
-        {
-            try
-            {
-                Log.Debug("File {Name} closed", fileStream.Name);
-                fileStream.Close();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "Could not close file {Name}", fileStream.Name);
-            }
         }
     }
 }

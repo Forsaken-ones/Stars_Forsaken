@@ -1,13 +1,14 @@
 ﻿using Serilog;
 using System;
 using System.IO;
+using Stars_Forsaken.Constants.Exceptions;
 
-namespace Stars_Forsaken.Utilities.DirFilEdit
+namespace Stars_Forsaken.Utilities.DirFileMan
 {
     /// <summary>
     /// Wrapper for the <see cref="Directory"/> class that exposes static methods for directory manipulation.
     /// </summary>
-    public class DirEdit
+    public static class DirManager
     {
         public static string GetParentDir(string path)
         {
@@ -17,8 +18,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Cannot access parent directory of {Path}", path);
-                return null;
+                throw new DirectoryManagementException("Cannot access parent directory of " + path, e);
             }
         }
 
@@ -71,7 +71,7 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             }
             catch (Exception e)
             {
-                Log.Error(e, "Could not create directories and/or subdirectories at {Path}", dirPath);
+                Log.Debug(e, "Could not create directories and/or subdirectories at {Path}", dirPath);
                 return null;
             }
         }
@@ -88,12 +88,12 @@ namespace Stars_Forsaken.Utilities.DirFilEdit
             try
             {
                 Directory.Delete(dirPath, true);
-                Log.Debug("Deleted directories and/or subdirectories at {Path}", dirPath);
+                Log.Verbose("Deleted directories and/or subdirectories at {Path}", dirPath);
                 return true;
             }
             catch (Exception e)
             {
-                Log.Error(e, "Could not delete directories and/or subdirectories at {Path}", dirPath);
+                Log.Debug(e, "Could not delete directories and/or subdirectories at {Path}", dirPath);
                 return false;
             }
         }
